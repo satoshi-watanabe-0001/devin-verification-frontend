@@ -1,0 +1,56 @@
+name: Devin PR Japanese Comment
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  post-japanese-summary:
+    runs-on: ubuntu-latest
+    # Devinが作成したPRのみ対象
+    if: |
+      github.actor == 'devin-ai-integration[bot]' ||
+      startsWith(github.head_ref, 'devin/')
+    
+    steps:
+      - name: Post Japanese Summary Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `### 🤖 Devin AI Engineer
+
+            このプルリクエストをサポートします！以下の点にご注意ください：
+
+            ✅ 自動的に以下を実行します：
+            - このPRのコメントに対応します。コメントに「(aside)」を追加すると、無視されます。
+            - CIの失敗を確認し、修正をサポートします
+
+            注意：このリポジトリへの書き込み権限を持つユーザーからのコメントにのみ応答できます。
+
+            ⚙️ 制御オプション：
+            - [ ] 自動コメント監視とCI監視を無効にする
+
+            ---
+
+            **📋 このPRについて**
+
+            このPRは日本語で作成されています。詳細はPR本文をご確認ください。
+
+            **🔍 レビューのポイント：**
+            - 実装内容が要件を満たしているか
+            - コード規約に準拠しているか
+            - テストが適切に実施されているか
+            - ドキュメントが更新されているか（必要な場合）
+
+            ご質問やフィードバックがあれば、このPRにコメントしてください。`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
