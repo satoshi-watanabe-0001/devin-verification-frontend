@@ -1,5 +1,4 @@
 import React from 'react';
-import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/Footer';
 import { CategoryCard } from '@/components/ui/CategoryCard';
 
@@ -38,7 +37,6 @@ export default function SmartphonesPage() {
 
   return (
     <>
-      <Header />
       <main className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100">
         <div className="container mx-auto px-4 py-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">

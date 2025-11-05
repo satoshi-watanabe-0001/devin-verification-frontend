@@ -1,6 +1,5 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/Footer';
 
 /**
@@ -53,7 +52,6 @@ export default async function BrandPage({ params }: BrandPageProps) {
 
   return (
     <>
-      <Header />
       <main className={`min-h-screen ${config.backgroundColor}`}>
         <div className="container mx-auto px-4 py-12">
           <div className="text-center mb-12">
