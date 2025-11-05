@@ -1,8 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
+import { Facebook, Instagram, Youtube } from 'lucide-react';
 
 /**
  * フッターコンポーネント
+ * PBI-DP-001: ソーシャルメディアアイコンと著作権テキストを更新
  */
 export const Footer: React.FC = () => {
   const footerLinks = {
@@ -24,6 +26,14 @@ export const Footer: React.FC = () => {
       { label: 'プライバシーポリシー', href: '/privacy' },
     ],
   };
+
+  const socialLinks = [
+    { name: 'LINE', icon: '💬', href: '#', ariaLabel: 'LINEで友達追加' },
+    { name: 'Facebook', icon: Facebook, href: '#', ariaLabel: 'Facebookページ' },
+    { name: 'Instagram', icon: Instagram, href: '#', ariaLabel: 'Instagramアカウント' },
+    { name: 'TikTok', icon: '🎵', href: '#', ariaLabel: 'TikTokアカウント' },
+    { name: 'YouTube', icon: Youtube, href: '#', ariaLabel: 'YouTubeチャンネル' },
+  ];
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -87,10 +97,28 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 pt-8 text-center">
-          <p className="text-gray-400 text-sm">
-            © 2025 ahamo. All rights reserved.
-          </p>
+        <div className="border-t border-gray-800 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center space-x-4">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  className="text-gray-400 hover:text-white transition-colors"
+                  aria-label={social.ariaLabel}
+                >
+                  {typeof social.icon === 'string' ? (
+                    <span className="text-2xl">{social.icon}</span>
+                  ) : (
+                    <social.icon className="w-6 h-6" />
+                  )}
+                </a>
+              ))}
+            </div>
+            <p className="text-gray-400 text-sm">
+              © NTT DOCOMO, INC.
+            </p>
+          </div>
         </div>
       </div>
     </footer>
