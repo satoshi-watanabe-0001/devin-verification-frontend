@@ -1,10 +1,14 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { Footer } from '@/components/layout/Footer';
+import { IPhoneGrid } from '@/components/smartphones/iPhoneGrid';
+import { CampaignBanner } from '@/components/smartphones/CampaignBanner';
+import { mockiPhoneData } from '@/data/mockiPhoneData';
 
 /**
  * ブランド別スマートフォンページ
  * PBI-DP-001: iPhone、Android、docomo-certifiedブランドをサポート
+ * PBI-DP-002: iPhoneカテゴリページ閲覧機能 (DEVIN-7)
  */
 
 interface BrandConfig {
@@ -64,11 +68,22 @@ export default async function BrandPage({ params }: BrandPageProps) {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">
-            <p className="text-gray-600 text-center">
-              製品一覧は準備中です。
-            </p>
-          </div>
+          {brand === 'iphone' ? (
+            <>
+              <CampaignBanner
+                title="iPhone特別キャンペーン実施中！"
+                description="対象機種が最大15,000円引き"
+                className="mb-8"
+              />
+              <IPhoneGrid products={mockiPhoneData} />
+            </>
+          ) : (
+            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">
+              <p className="text-gray-600 text-center">
+                製品一覧は準備中です。
+              </p>
+            </div>
+          )}
         </div>
       </main>
       <Footer />
