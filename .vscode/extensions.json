@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "yzhang.markdown-all-in-one",
+    "shd101wyy.markdown-preview-enhanced",
+    "ritwickdey.liveserver",
+    "ms-vscode.live-preview"
+  ],
+  "unwantedRecommendations": []
+}
