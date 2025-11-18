@@ -1,14 +1,20 @@
-import React from 'react';
-import { notFound } from 'next/navigation';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Footer } from '@/components/layout/Footer';
 import { IPhoneGrid } from '@/components/smartphones/iPhoneGrid';
 import { CampaignBanner } from '@/components/smartphones/CampaignBanner';
+import { ContentApiService } from '@/services/api.service';
+import { transformProductCardDtos } from '@/utils/dataTransforms';
+import { SmartphoneProduct } from '@/types/smartphone';
 import { mockiPhoneData } from '@/data/mockiPhoneData';
 
 /**
  * ブランド別スマートフォンページ
  * PBI-DP-001: iPhone、Android、docomo-certifiedブランドをサポート
  * PBI-DP-002: iPhoneカテゴリページ閲覧機能 (DEVIN-7)
+ * DEVIN-30: バックエンドAPI統合
  */
 
 interface BrandConfig {
@@ -40,18 +46,57 @@ const brandConfig: Record<string, BrandConfig> = {
 };
 
 interface BrandPageProps {
-  params: Promise<{
+  params: {
     brand: string;
-  }>;
+  };
 }
 
-export default async function BrandPage({ params }: BrandPageProps) {
-  const { brand } = await params;
-  
+export default function BrandPage({ params }: BrandPageProps) {
+  const router = useRouter();
+  const { brand } = params;
+  const [products, setProducts] = useState<SmartphoneProduct[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   const config = brandConfig[brand];
 
+  useEffect(() => {
+    if (!config) {
+      router.push('/404');
+      return;
+    }
+
+    if (brand === 'iphone') {
+      const fetchProducts = async () => {
+        try {
+          setLoading(true);
+          setError(null);
+          
+          const response = await ContentApiService.getCategoryProducts(brand);
+          
+          if (response.products && response.products.length > 0) {
+            const transformedProducts = transformProductCardDtos(response.products);
+            setProducts(transformedProducts);
+          } else {
+            setProducts(mockiPhoneData);
+          }
+        } catch (err) {
+          console.error('Error fetching products:', err);
+          setError('製品情報の取得に失敗しました。モックデータを表示します。');
+          setProducts(mockiPhoneData);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchProducts();
+    } else {
+      setLoading(false);
+    }
+  }, [brand, config, router]);
+
   if (!config) {
-    notFound();
+    return null;
   }
 
   return (
@@ -75,7 +120,20 @@ export default async function BrandPage({ params }: BrandPageProps) {
                 description="対象機種が最大15,000円引き"
                 className="mb-8"
               />
-              <IPhoneGrid products={mockiPhoneData} />
+              
+              {error && (
+                <div className="mb-4 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded">
+                  {error}
+                </div>
+              )}
+              
+              {loading ? (
+                <div className="flex justify-center items-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+                </div>
+              ) : (
+                <IPhoneGrid products={products} />
+              )}
             </>
           ) : (
             <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">

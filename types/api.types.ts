@@ -56,3 +56,61 @@ export interface PaginatedResponse<T> {
   page: number;
   pageSize: number;
 }
+
+/**
+ * バックエンドAPIのDTO型定義
+ * CategoryControllerから返されるレスポンス構造
+ */
+
+export interface PriceInfo {
+  regularPrice: number;
+  campaignPrice?: number;
+  monthlyPrice?: number;
+}
+
+export interface AvailabilityInfo {
+  inStock: boolean;
+  estimatedDeliveryDays?: number;
+}
+
+export interface CampaignBadge {
+  id: string;
+  label: string;
+  discountAmount?: number;
+}
+
+export interface ProductCardDto {
+  productId: string;
+  productName: string;
+  manufacturer: string;
+  priceInfo: PriceInfo;
+  imageUrl: string;
+  storageOptions: string[];
+  colorOptions: Array<{
+    name: string;
+    colorCode: string;
+  }>;
+  availability?: AvailabilityInfo;
+  campaignBadges?: CampaignBadge[];
+  has5G: boolean;
+  purchaseLink: string;
+  features: string[];
+  description: string;
+  specifications: string[];
+}
+
+export interface CategoryDetailResponse {
+  categoryCode: string;
+  categoryName: string;
+  products: ProductCardDto[];
+  totalCount: number;
+}
+
+export interface FilterParams {
+  sort?: string;
+  priceMin?: number;
+  priceMax?: number;
+  storage?: string[];
+  color?: string[];
+  campaignId?: string;
+}
