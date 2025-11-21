@@ -57,6 +57,9 @@ export function transformProductCardDto(dto: ProductCardDto): SmartphoneProduct 
     saleLabel: saleLabel,
     has5G: true,
     link: 'https://onlineshop.smt.docomo.ne.jp',
+    features: [],
+    description: '',
+    specifications: [],
   };
 }
 
