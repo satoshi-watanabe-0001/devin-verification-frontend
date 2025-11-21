@@ -124,14 +124,15 @@ export class ContentApiService {
       }
 
       const queryString = queryParams.toString();
-      const url = `${API_BASE_URL}/api/v1/products/categories/${categoryCode}${queryString ? `?${queryString}` : ''}`;
+      const url = `${API_BASE_URL}/api/v1/v1/products/categories/${categoryCode}${queryString ? `?${queryString}` : ''}`;
       
-      const response = await fetch(url);
+      const response = await fetch(url, { cache: 'no-store' });
       if (!response.ok) {
         throw new Error(`Failed to fetch category products: ${response.status}`);
       }
       
-      return await response.json();
+      const json = await response.json();
+      return json.data;
     } catch (error) {
       console.error('Error fetching category products:', error);
       return {

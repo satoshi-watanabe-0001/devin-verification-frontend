@@ -81,22 +81,17 @@ export interface CampaignBadge {
 
 export interface ProductCardDto {
   productId: string;
-  productName: string;
+  modelName: string;
   manufacturer: string;
   priceInfo: PriceInfo;
   imageUrl: string;
   storageOptions: string[];
   colorOptions: Array<{
     name: string;
-    colorCode: string;
+    code: string;
   }>;
   availability?: AvailabilityInfo;
   campaignBadges?: CampaignBadge[];
-  has5G: boolean;
-  purchaseLink: string;
-  features: string[];
-  description: string;
-  specifications: string[];
 }
 
 export interface CategoryDetailResponse {
