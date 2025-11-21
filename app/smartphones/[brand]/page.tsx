@@ -14,8 +14,8 @@ export const dynamic = 'force-dynamic';
  * DEVIN-30: バックエンドAPI統合
  * 
  * データソース制御:
- * - USE_MOCK=true: モックデータを使用（フロントエンド単体開発用）
- * - USE_MOCK=false: バックエンドAPIを使用（E2E環境用）
+ * - NEXT_PUBLIC_USE_MOCK=true: MSWでAPIリクエストをインターセプト（フロントエンド単体開発用）
+ * - NEXT_PUBLIC_USE_MOCK=false: バックエンドAPIを使用（E2E環境用）
  */
 
 interface BrandConfig {
@@ -61,33 +61,28 @@ export default async function BrandPage({ params }: BrandPageProps) {
     notFound();
   }
 
-  const useMock = process.env.USE_MOCK === 'true';
   let initialProducts: SmartphoneProduct[] = [];
-  let dataSource: 'mock' | 'backend' | 'error' = 'backend';
+  let dataSource: 'msw' | 'backend' | 'error' = 'backend';
 
   if (brand === 'iphone') {
-    if (useMock) {
-      const { mockiPhoneData } = await import('@/data/mockiPhoneData');
-      initialProducts = mockiPhoneData;
-      dataSource = 'mock';
-      console.log('[DATA SOURCE] Using mock data (USE_MOCK=true)');
-    } else {
-      try {
-        const response = await ContentApiService.getCategoryProducts(brand);
-        initialProducts = transformProductCardDtos(response.products ?? []);
-        dataSource = 'backend';
-        console.log(`[DATA SOURCE] Using backend API data (${initialProducts.length} products)`);
-      } catch (err) {
-        console.error('[DATA SOURCE] Error fetching products from backend:', err);
-        initialProducts = [];
-        dataSource = 'error';
-      }
+    try {
+      const response = await ContentApiService.getCategoryProducts(brand);
+      initialProducts = transformProductCardDtos(response.products ?? []);
+      
+      const useMock = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
+      dataSource = useMock ? 'msw' : 'backend';
+      
+      console.log(`[DATA SOURCE] Using ${dataSource} (${initialProducts.length} products)`);
+    } catch (err) {
+      console.error('[DATA SOURCE] Error fetching products:', err);
+      initialProducts = [];
+      dataSource = 'error';
     }
   }
 
   return (
     <>
-      <main className={`min-h-screen ${config.backgroundColor}`} data-source={dataSource}>
+      <main className={`min-h-screen ${config.backgroundColor}`} data-source={dataSource} data-use-mock={process.env.NEXT_PUBLIC_USE_MOCK}>
         <div className="container mx-auto px-4 py-12">
           <div className="text-center mb-12">
             <div className="text-8xl mb-4">{config.emoji}</div>
