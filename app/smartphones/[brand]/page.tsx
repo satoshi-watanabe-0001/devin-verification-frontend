@@ -4,7 +4,6 @@ import { BrandPageClient } from '@/components/smartphones/BrandPageClient';
 import { ContentApiService } from '@/services/api.service';
 import { transformProductCardDtos } from '@/utils/dataTransforms';
 import { SmartphoneProduct } from '@/types/smartphone';
-import { mockiPhoneData } from '@/data/mockiPhoneData';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +12,10 @@ export const dynamic = 'force-dynamic';
  * PBI-DP-001: iPhone、Android、docomo-certifiedブランドをサポート
  * PBI-DP-002: iPhoneカテゴリページ閲覧機能 (DEVIN-7)
  * DEVIN-30: バックエンドAPI統合
+ * 
+ * データソース制御:
+ * - USE_MOCK=true: モックデータを使用（フロントエンド単体開発用）
+ * - USE_MOCK=false: バックエンドAPIを使用（E2E環境用）
  */
 
 interface BrandConfig {
@@ -58,26 +61,33 @@ export default async function BrandPage({ params }: BrandPageProps) {
     notFound();
   }
 
+  const useMock = process.env.USE_MOCK === 'true';
   let initialProducts: SmartphoneProduct[] = [];
+  let dataSource: 'mock' | 'backend' | 'error' = 'backend';
 
   if (brand === 'iphone') {
-    try {
-      const response = await ContentApiService.getCategoryProducts(brand);
-      
-      if (response.products && response.products.length > 0) {
-        initialProducts = transformProductCardDtos(response.products);
-      } else {
-        initialProducts = mockiPhoneData;
-      }
-    } catch (err) {
-      console.error('Error fetching products:', err);
+    if (useMock) {
+      const { mockiPhoneData } = await import('@/data/mockiPhoneData');
       initialProducts = mockiPhoneData;
+      dataSource = 'mock';
+      console.log('[DATA SOURCE] Using mock data (USE_MOCK=true)');
+    } else {
+      try {
+        const response = await ContentApiService.getCategoryProducts(brand);
+        initialProducts = transformProductCardDtos(response.products ?? []);
+        dataSource = 'backend';
+        console.log(`[DATA SOURCE] Using backend API data (${initialProducts.length} products)`);
+      } catch (err) {
+        console.error('[DATA SOURCE] Error fetching products from backend:', err);
+        initialProducts = [];
+        dataSource = 'error';
+      }
     }
   }
 
   return (
     <>
-      <main className={`min-h-screen ${config.backgroundColor}`}>
+      <main className={`min-h-screen ${config.backgroundColor}`} data-source={dataSource}>
         <div className="container mx-auto px-4 py-12">
           <div className="text-center mb-12">
             <div className="text-8xl mb-4">{config.emoji}</div>
