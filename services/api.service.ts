@@ -124,7 +124,7 @@ export class ContentApiService {
       }
 
       const queryString = queryParams.toString();
-      const url = `${API_BASE_URL}/api/v1/products/categories/${categoryCode}${queryString ? `?${queryString}` : ''}`;
+      const url = `${API_BASE_URL}/api/v1/v1/products/categories/${categoryCode}${queryString ? `?${queryString}` : ''}`;
       
       const response = await fetch(url);
       if (!response.ok) {
