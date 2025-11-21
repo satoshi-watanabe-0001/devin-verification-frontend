@@ -6,6 +6,8 @@ import { transformProductCardDtos } from '@/utils/dataTransforms';
 import { SmartphoneProduct } from '@/types/smartphone';
 import { mockiPhoneData } from '@/data/mockiPhoneData';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * ブランド別スマートフォンページ
  * PBI-DP-001: iPhone、Android、docomo-certifiedブランドをサポート
