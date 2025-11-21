@@ -4,7 +4,6 @@ import { BrandPageClient } from '@/components/smartphones/BrandPageClient';
 import { ContentApiService } from '@/services/api.service';
 import { transformProductCardDtos } from '@/utils/dataTransforms';
 import { SmartphoneProduct } from '@/types/smartphone';
-import { mockiPhoneData } from '@/data/mockiPhoneData';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +12,10 @@ export const dynamic = 'force-dynamic';
  * PBI-DP-001: iPhone、Android、docomo-certifiedブランドをサポート
  * PBI-DP-002: iPhoneカテゴリページ閲覧機能 (DEVIN-7)
  * DEVIN-30: バックエンドAPI統合
+ * 
+ * データソース制御:
+ * - NEXT_PUBLIC_USE_MOCK=true: MSWでAPIリクエストをインターセプト（フロントエンド単体開発用）
+ * - NEXT_PUBLIC_USE_MOCK=false: バックエンドAPIを使用（E2E環境用）
  */
 
 interface BrandConfig {
@@ -59,25 +62,27 @@ export default async function BrandPage({ params }: BrandPageProps) {
   }
 
   let initialProducts: SmartphoneProduct[] = [];
+  let dataSource: 'msw' | 'backend' | 'error' = 'backend';
 
   if (brand === 'iphone') {
     try {
       const response = await ContentApiService.getCategoryProducts(brand);
+      initialProducts = transformProductCardDtos(response.products ?? []);
       
-      if (response.products && response.products.length > 0) {
-        initialProducts = transformProductCardDtos(response.products);
-      } else {
-        initialProducts = mockiPhoneData;
-      }
+      const useMock = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
+      dataSource = useMock ? 'msw' : 'backend';
+      
+      console.log(`[DATA SOURCE] Using ${dataSource} (${initialProducts.length} products)`);
     } catch (err) {
-      console.error('Error fetching products:', err);
-      initialProducts = mockiPhoneData;
+      console.error('[DATA SOURCE] Error fetching products:', err);
+      initialProducts = [];
+      dataSource = 'error';
     }
   }
 
   return (
     <>
-      <main className={`min-h-screen ${config.backgroundColor}`}>
+      <main className={`min-h-screen ${config.backgroundColor}`} data-source={dataSource} data-use-mock={process.env.NEXT_PUBLIC_USE_MOCK}>
         <div className="container mx-auto px-4 py-12">
           <div className="text-center mb-12">
             <div className="text-8xl mb-4">{config.emoji}</div>
