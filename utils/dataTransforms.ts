@@ -34,39 +34,29 @@ export function transformProductCardDto(dto: ProductCardDto): SmartphoneProduct 
   const campaignPrice = dto.priceInfo.campaignPrice 
     ? formatCurrency(dto.priceInfo.campaignPrice) 
     : undefined;
-  const monthlyPrice = dto.priceInfo.monthlyPrice 
-    ? formatMonthlyPrice(dto.priceInfo.monthlyPrice) 
-    : undefined;
 
   let saleLabel: string | undefined;
   if (dto.campaignBadges && dto.campaignBadges.length > 0) {
     const badge = dto.campaignBadges[0];
-    if (badge.discountAmount) {
-      saleLabel = `最大${badge.discountAmount.toLocaleString('ja-JP')}円引き`;
-    } else {
-      saleLabel = badge.label;
-    }
+    saleLabel = badge.label;
   }
 
   return {
     id: dto.productId,
-    name: dto.productName,
+    name: dto.modelName,
     brand: dto.manufacturer,
-    price: price,
+    price: campaignPrice ? `${campaignPrice}〜` : `${price}〜`,
     campaignPrice: campaignPrice,
-    monthlyPrice: monthlyPrice,
+    monthlyPrice: undefined,
     imageUrl: dto.imageUrl,
     storageOptions: dto.storageOptions,
     colorOptions: dto.colorOptions.map(color => ({
       name: color.name,
-      colorCode: color.colorCode,
+      colorCode: color.code,
     })),
     saleLabel: saleLabel,
-    has5G: dto.has5G,
-    link: dto.purchaseLink,
-    features: dto.features,
-    description: dto.description,
-    specifications: dto.specifications,
+    has5G: true,
+    link: 'https://onlineshop.smt.docomo.ne.jp',
   };
 }
 
