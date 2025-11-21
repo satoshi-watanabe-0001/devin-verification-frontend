@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:mock": "NEXT_PUBLIC_USE_MOCK=true next dev",
+    "dev:api": "NEXT_PUBLIC_USE_MOCK=false next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -32,8 +34,14 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
+    "msw": "^2.12.2",
     "playwright": "^1.56.1",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
