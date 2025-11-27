@@ -41,13 +41,20 @@ export function transformProductCardDto(dto: ProductCardDto): SmartphoneProduct 
     saleLabel = badge.label;
   }
 
+  // 月額料金の計算（24回払いを想定）
+  const monthlyPrice = dto.priceInfo.monthlyPrice 
+    ? formatMonthlyPrice(dto.priceInfo.monthlyPrice)
+    : dto.priceInfo.campaignPrice 
+      ? formatMonthlyPrice(Math.ceil(dto.priceInfo.campaignPrice / 24))
+      : formatMonthlyPrice(Math.ceil(dto.priceInfo.regularPrice / 24));
+
   return {
     id: dto.productId,
     name: dto.modelName,
     brand: dto.manufacturer,
     price: campaignPrice ? `${campaignPrice}〜` : `${price}〜`,
     campaignPrice: campaignPrice,
-    monthlyPrice: undefined,
+    monthlyPrice: monthlyPrice,
     imageUrl: dto.imageUrl,
     storageOptions: dto.storageOptions,
     colorOptions: dto.colorOptions.map(color => ({
