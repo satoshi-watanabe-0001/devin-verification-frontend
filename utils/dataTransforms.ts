@@ -3,7 +3,7 @@
  * バックエンドDTOとフロントエンド型の変換を行う
  */
 
-import { ProductCardDto } from '@/types/api.types';
+import { ProductCardDto, CategoryInfo } from '@/types/api.types';
 import { SmartphoneProduct } from '@/types/smartphone';
 
 /**
@@ -70,4 +70,58 @@ export function transformProductCardDto(dto: ProductCardDto): SmartphoneProduct 
  */
 export function transformProductCardDtos(dtos: ProductCardDto[]): SmartphoneProduct[] {
   return dtos.map(dto => transformProductCardDto(dto));
+}
+
+/**
+ * カテゴリコードから絵文字を取得
+ * @param categoryCode - カテゴリコード
+ * @returns 絵文字
+ */
+function getCategoryEmoji(categoryCode: string): string {
+  const emojiMap: Record<string, string> = {
+    'iphone': '📱',
+    'android': '🤖',
+    'docomo-certified': '♻️',
+    'accessories': '🎧',
+  };
+  return emojiMap[categoryCode] || '📦';
+}
+
+/**
+ * カテゴリコードからリンクパスを取得
+ * @param categoryCode - カテゴリコード
+ * @returns リンクパス
+ */
+function getCategoryLink(categoryCode: string): string {
+  const linkMap: Record<string, string> = {
+    'iphone': '/smartphones/iphone',
+    'android': '/smartphones/android',
+    'refurbished': '/smartphones/refurbished',
+    'docomo-certified': '/smartphones/docomo-certified',
+    'accessories': '/accessories',
+  };
+  return linkMap[categoryCode] || `/smartphones/${categoryCode}`;
+}
+
+/**
+ * CategoryInfoをフロントエンド用のカテゴリ形式に変換
+ * @param category - バックエンドから返されるCategoryInfo
+ * @returns フロントエンド用のカテゴリオブジェクト
+ */
+export function transformCategoryInfo(category: CategoryInfo) {
+  return {
+    title: category.displayName,
+    image: category.heroImageUrl || getCategoryEmoji(category.categoryCode),
+    link: getCategoryLink(category.categoryCode),
+    description: category.leadText || undefined,
+  };
+}
+
+/**
+ * CategoryInfo配列をフロントエンド用のカテゴリ配列に変換
+ * @param categories - バックエンドから返されるCategoryInfo配列
+ * @returns フロントエンド用のカテゴリ配列
+ */
+export function transformCategoryInfos(categories: CategoryInfo[]) {
+  return categories.map(category => transformCategoryInfo(category));
 }

@@ -109,3 +109,21 @@ export interface FilterParams {
   color?: string[];
   campaignId?: string;
 }
+
+/**
+ * カテゴリ情報
+ */
+export interface CategoryInfo {
+  categoryCode: string;
+  displayName: string;
+  heroImageUrl: string | null;
+  productCount: number;
+  leadText: string;
+}
+
+/**
+ * カテゴリ一覧レスポンス
+ */
+export interface CategoryListResponse {
+  categories: CategoryInfo[];
+}

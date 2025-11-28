@@ -1,7 +1,44 @@
 import { http, HttpResponse } from 'msw';
-import { CategoryDetailResponse } from '@/types/api.types';
+import { CategoryDetailResponse, CategoryListResponse } from '@/types/api.types';
 
 export const handlers = [
+  http.get('*/api/v1/v1/products/categories', () => {
+    const categoryListResponse: CategoryListResponse = {
+      categories: [
+        {
+          categoryCode: 'iphone',
+          displayName: 'iPhone',
+          heroImageUrl: null,
+          productCount: 5,
+          leadText: '',
+        },
+        {
+          categoryCode: 'android',
+          displayName: 'Android',
+          heroImageUrl: null,
+          productCount: 0,
+          leadText: '',
+        },
+        {
+          categoryCode: 'docomo-certified',
+          displayName: 'ドコモ認定リユース品',
+          heroImageUrl: null,
+          productCount: 0,
+          leadText: '30日以内無料交換可能',
+        },
+        {
+          categoryCode: 'accessories',
+          displayName: 'アクセサリ',
+          heroImageUrl: null,
+          productCount: 0,
+          leadText: '',
+        },
+      ],
+    };
+
+    return HttpResponse.json({ data: categoryListResponse });
+  }),
+
   http.get('*/api/v1/v1/products/categories/iphone', () => {
     const categoryResponse: CategoryDetailResponse = {
       categoryCode: 'iphone',
