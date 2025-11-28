@@ -11,6 +11,7 @@ import {
   ApiResponse, 
   PaginatedResponse,
   CategoryDetailResponse,
+  CategoryListResponse,
   FilterParams
 } from '@/types/api.types';
 
@@ -94,6 +95,29 @@ export class ContentApiService {
     } catch (error) {
       console.error('Error fetching plans:', error);
       return [];
+    }
+  }
+
+  /**
+   * カテゴリ一覧を取得
+   * @returns カテゴリ一覧レスポンス
+   */
+  static async getCategories(): Promise<CategoryListResponse> {
+    try {
+      const url = `${API_BASE_URL}/api/v1/v1/products/categories`;
+      
+      const response = await fetch(url, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch categories: ${response.status}`);
+      }
+      
+      const json = await response.json();
+      return json.data;
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      return {
+        categories: [],
+      };
     }
   }
 
