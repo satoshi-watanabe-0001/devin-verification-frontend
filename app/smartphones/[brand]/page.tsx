@@ -64,7 +64,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
   let initialProducts: SmartphoneProduct[] = [];
   let dataSource: 'msw' | 'backend' | 'error' = 'backend';
 
-  if (brand === 'iphone') {
+  if (brand === 'iphone' || brand === 'android') {
     try {
       const response = await ContentApiService.getCategoryProducts(brand);
       initialProducts = transformProductCardDtos(response.products ?? []);
