@@ -167,4 +167,131 @@ export const handlers = [
 
     return HttpResponse.json({ data: categoryResponse });
   }),
+
+  http.get('*/api/v1/v1/products/categories/android', () => {
+    const categoryResponse: CategoryDetailResponse = {
+      categoryCode: 'android',
+      categoryName: 'Android',
+      totalCount: 5,
+      products: [
+        {
+          productId: 'galaxy-s24-ultra',
+          manufacturer: 'Samsung',
+          modelName: 'Galaxy S24 Ultra',
+          imageUrl: '/images/galaxy-s24-ultra.jpg',
+          storageOptions: ['256GB', '512GB', '1TB'],
+          colorOptions: [
+            { name: 'チタニウムグレー', code: '#6B7280' },
+            { name: 'チタニウムブラック', code: '#111827' },
+            { name: 'チタニウムバイオレット', code: '#7C3AED' },
+          ],
+          priceInfo: {
+            regularPrice: 189800,
+            campaignPrice: 169800,
+          },
+          availability: {
+            inStock: true,
+            estimatedDeliveryDays: 3,
+          },
+          campaignBadges: [
+            { id: 'android-sale', label: '最大58,201円引き', discountAmount: 20000 },
+          ],
+        },
+        {
+          productId: 'galaxy-s24',
+          manufacturer: 'Samsung',
+          modelName: 'Galaxy S24',
+          imageUrl: '/images/galaxy-s24.jpg',
+          storageOptions: ['128GB', '256GB'],
+          colorOptions: [
+            { name: 'オニキスブラック', code: '#1F2937' },
+            { name: 'マーブルグレー', code: '#9CA3AF' },
+            { name: 'コバルトバイオレット', code: '#8B5CF6' },
+            { name: 'アンバーイエロー', code: '#F59E0B' },
+          ],
+          priceInfo: {
+            regularPrice: 139800,
+            campaignPrice: 124800,
+          },
+          availability: {
+            inStock: true,
+            estimatedDeliveryDays: 2,
+          },
+          campaignBadges: [
+            { id: 'android-sale', label: '最大58,201円引き', discountAmount: 15000 },
+          ],
+        },
+        {
+          productId: 'pixel-8-pro',
+          manufacturer: 'Google',
+          modelName: 'Pixel 8 Pro',
+          imageUrl: '/images/pixel-8-pro.jpg',
+          storageOptions: ['128GB', '256GB', '512GB'],
+          colorOptions: [
+            { name: 'オブシディアン', code: '#1F2937' },
+            { name: 'ポーセリン', code: '#F9FAFB' },
+            { name: 'ベイ', code: '#60A5FA' },
+          ],
+          priceInfo: {
+            regularPrice: 159800,
+            campaignPrice: 139800,
+          },
+          availability: {
+            inStock: true,
+            estimatedDeliveryDays: 2,
+          },
+          campaignBadges: [
+            { id: 'android-sale', label: '最大58,201円引き', discountAmount: 20000 },
+          ],
+        },
+        {
+          productId: 'xperia-1-vi',
+          manufacturer: 'Sony',
+          modelName: 'Xperia 1 VI',
+          imageUrl: '/images/xperia-1-vi.jpg',
+          storageOptions: ['256GB', '512GB'],
+          colorOptions: [
+            { name: 'ブラック', code: '#000000' },
+            { name: 'プラチナシルバー', code: '#D1D5DB' },
+            { name: 'カーキグリーン', code: '#65A30D' },
+          ],
+          priceInfo: {
+            regularPrice: 179800,
+            campaignPrice: 159800,
+          },
+          availability: {
+            inStock: true,
+            estimatedDeliveryDays: 3,
+          },
+          campaignBadges: [
+            { id: 'android-sale', label: '最大58,201円引き', discountAmount: 20000 },
+          ],
+        },
+        {
+          productId: 'aquos-r8-pro',
+          manufacturer: 'Sharp',
+          modelName: 'AQUOS R8 Pro',
+          imageUrl: '/images/aquos-r8-pro.jpg',
+          storageOptions: ['256GB'],
+          colorOptions: [
+            { name: 'ブラック', code: '#000000' },
+            { name: 'ブルー', code: '#2563EB' },
+          ],
+          priceInfo: {
+            regularPrice: 149800,
+            campaignPrice: 134800,
+          },
+          availability: {
+            inStock: true,
+            estimatedDeliveryDays: 2,
+          },
+          campaignBadges: [
+            { id: 'android-sale', label: '最大58,201円引き', discountAmount: 15000 },
+          ],
+        },
+      ],
+    };
+
+    return HttpResponse.json({ data: categoryResponse });
+  }),
 ];
