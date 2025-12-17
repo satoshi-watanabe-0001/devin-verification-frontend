@@ -21,7 +21,7 @@ export const BrandPageClient: React.FC<BrandPageClientProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (brand === 'iphone' && initialProducts.length === 0) {
+    if ((brand === 'iphone' || brand === 'android') && initialProducts.length === 0) {
       const fetchProducts = async () => {
         try {
           setLoading(true);
@@ -45,7 +45,7 @@ export const BrandPageClient: React.FC<BrandPageClientProps> = ({
     }
   }, [brand, initialProducts.length]);
 
-  if (brand !== 'iphone') {
+  if (brand !== 'iphone' && brand !== 'android') {
     return (
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">
         <p className="text-gray-600 text-center">
@@ -55,11 +55,24 @@ export const BrandPageClient: React.FC<BrandPageClientProps> = ({
     );
   }
 
+  const campaignConfig: Record<string, { title: string; description: string }> = {
+    iphone: {
+      title: 'iPhone特別キャンペーン実施中！',
+      description: '対象機種が最大15,000円引き',
+    },
+    android: {
+      title: 'Android特別キャンペーン実施中！',
+      description: '対象機種が最大58,201円引き',
+    },
+  };
+
+  const campaign = campaignConfig[brand] ?? campaignConfig.iphone;
+
   return (
     <>
       <CampaignBanner
-        title="iPhone特別キャンペーン実施中！"
-        description="対象機種が最大15,000円引き"
+        title={campaign.title}
+        description={campaign.description}
         className="mb-8"
       />
       
