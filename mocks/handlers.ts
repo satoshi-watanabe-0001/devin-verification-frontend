@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { CategoryDetailResponse, CategoryListResponse } from '@/types/api.types';
+import { accountHandlers } from './accountHandlers';
 
 export const handlers = [
   http.get('*/api/v1/v1/products/categories', () => {
@@ -294,4 +295,5 @@ export const handlers = [
 
     return HttpResponse.json({ data: categoryResponse });
   }),
+  ...accountHandlers,
 ];
